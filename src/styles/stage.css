@@ -1,0 +1,151 @@
+/* The hero: mood background, one WebGL canvas (or floating posters), and two layers of text over it.
+   gallery = every bottle floating, tabs and the "sweet fragrances" note.   focus = one bottle, big, with its story and an X. */
+.stage { --vl: 0px; --vc: calc(var(--vl) + (100% - var(--vl)) / 2); touch-action: pan-y; position: relative; isolation: isolate; min-height: 100svh; overflow: clip; background: var(--deep); color: var(--blush); }
+.stage-bg { position: absolute; inset: 0; z-index: 0; }
+.mood { position: absolute; inset: 0; opacity: 0; transition: opacity 700ms var(--ease-out); background: linear-gradient(162deg, var(--a), var(--b)); }
+.mood.on { opacity: 1; }
+.mood::after { content: ''; position: absolute; inset: 0; background: radial-gradient(closest-side at var(--vc) 46%, var(--glow), transparent); opacity: .3; }
+.vignette { position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 40%, transparent 52%, rgba(20, 5, 11, .62)); pointer-events: none; }
+.bigword { position: absolute; left: var(--vc); top: 46%; translate: -50% -50%; margin: 0; font: italic 300 clamp(15rem, 52vw, 50rem)/.8 var(--font-display); color: transparent; -webkit-text-stroke: 1px rgba(244, 198, 210, .13); white-space: nowrap; pointer-events: none; user-select: none; transition: opacity 400ms var(--ease-out); }
+.bigword.swap { opacity: 0; }
+
+.stage-view { position: absolute; inset: 0 0 0 var(--vl); z-index: 1; touch-action: pan-y; outline-offset: -4px; }
+.stage-view.point { cursor: pointer; }
+.stage[data-state='focus'] .stage-view { cursor: grab; }
+.stage-view.grabbing { cursor: grabbing !important; }
+.gl { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 500ms var(--ease-out); }
+.gl-on .gl { opacity: 1; }
+
+/* floating names under the bottles (placed every frame by the 3D scene) */
+.tags { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.tag { position: absolute; left: 0; top: 0; white-space: nowrap; font: 500 .6rem var(--font-ui); letter-spacing: .22em; text-transform: uppercase; color: var(--blush); opacity: 0; transition: opacity 320ms var(--ease-out), color 200ms var(--ease-out); will-change: transform; text-shadow: 0 1px 10px rgba(20, 5, 11, .6); }
+.tag.on { opacity: .78; }
+.tag.on.hover { opacity: 1; color: var(--pink); }
+
+/* posters instead of 3D (no WebGL, data saver, ?still): the same floating gallery made of pictures */
+.posters { position: absolute; inset: 0; display: none; overflow: hidden; }
+.posters-on .posters { display: block; }
+.pp { position: absolute; left: 0; top: 0; width: calc(var(--h) * .8px); height: calc(var(--h) * 1px); padding: 0; border: 0; background: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transform: translate3d(calc(var(--x) * 1px - 50%), calc(var(--y) * 1px - 50%), 0) rotate(var(--rot, 0deg)) scale(var(--sc, 1)); transition: transform 760ms var(--ease-out), opacity 300ms var(--ease-out); touch-action: pan-y; }
+.pp.fall { transition: transform 760ms cubic-bezier(.55, 0, 1, .45), opacity 300ms 460ms linear; opacity: 0; }
+.pp.jump { transition: transform 900ms cubic-bezier(.34, 1.45, .64, 1); }
+.pp.snap { transition: none; }
+.pp.gone { visibility: hidden; }
+.pp img { position: absolute; left: 50%; top: 50%; height: 118%; width: auto; aspect-ratio: 4 / 5; translate: -50% -50%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 18px 22px rgba(10, 2, 6, .4)); animation: drift 6.5s var(--ease-io) infinite alternate; animation-delay: var(--dl, 0s); }
+.pp span { position: absolute; left: 50%; top: calc(100% + .1rem); translate: -50% 0; white-space: nowrap; font: 500 .6rem var(--font-ui); letter-spacing: .22em; text-transform: uppercase; opacity: .8; transition: opacity 200ms var(--ease-out); }
+.stage[data-state='focus'] .pp span { opacity: 0; }
+@keyframes drift { from { transform: translate3d(0, -2.5%, 0) rotate(-1.6deg); } to { transform: translate3d(0, 2.5%, 0) rotate(1.6deg); } }
+
+.stage-status { position: absolute; z-index: 2; left: var(--vc); top: 50%; translate: -50% 110%; margin: 0; padding: .3rem .9rem; border-radius: 99px; background: rgba(20, 5, 11, .5); font: 500 .62rem var(--font-ui); letter-spacing: .2em; text-transform: uppercase; pointer-events: none; opacity: 0; transition: opacity 240ms; }
+.stage-status.on { opacity: 1; }
+
+/* ---------- text layers ---------- */
+.stage-ui { position: relative; z-index: 2; min-height: 100svh; display: grid; padding: 5.4rem var(--gutter) calc(clamp(1.5rem, 4vw, 3rem) + 1rem); pointer-events: none; }
+.g-layer, .f-layer { grid-area: 1 / 1; position: relative; display: grid; gap: 1rem; min-width: 0; min-height: 0; transition: opacity 240ms var(--ease-out), visibility 0s; }
+.g-layer > *, .f-layer > * { pointer-events: auto; min-width: 0; }
+.g-layer { grid-template-rows: auto minmax(13rem, 1fr) auto; }
+.f-layer { grid-template-rows: minmax(10rem, 1fr) auto auto; }
+.g-zone, .f-zone { pointer-events: none !important; }
+.stage[data-state='gallery'] .f-layer, .stage[data-state='focus'] .g-layer { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 200ms var(--ease-out), visibility 0s 200ms; }
+.stage[data-state='gallery'] .f-layer *, .stage[data-state='focus'] .g-layer * { pointer-events: none !important; }
+
+.hero-copy { max-width: 36rem; }
+.hero-copy h1 { color: var(--blush); font-size: clamp(2.7rem, min(10.4vw, 9.6svh), 6.4rem); }
+.hero-copy h1 em { color: var(--pink); }
+.hero-copy .sub { display: none; margin: 1.1rem 0 0; max-width: 28rem; opacity: .85; }
+.dock { display: grid; gap: .8rem; position: relative; }
+
+.tabs { display: flex; gap: .45rem; margin: 0 calc(-1 * var(--gutter)); padding: .2rem var(--gutter); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: none; min-height: 2.75rem; padding: .35rem 1.05rem; border: 1px solid rgba(244, 198, 210, .35); border-radius: 999px; background: rgba(20, 5, 11, .18); color: var(--blush); font: 500 .68rem var(--font-ui); letter-spacing: .18em; text-transform: uppercase; transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out); }
+.tab:active { transform: scale(.96); }
+.tab[aria-pressed='true'] { background: var(--pink); border-color: var(--pink); color: var(--deep); }
+
+/* where the names used to be: a note about the collection (changes with the tab) */
+.gnote { display: grid; gap: .3rem; min-height: 6.4rem; transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.dock .gnote.swap { opacity: 0; transform: translateY(6px); }
+.gnote .kick { margin: 0; font: 500 .66rem var(--font-ui); letter-spacing: .3em; text-transform: uppercase; color: var(--pink); }
+.gnote h2 { font-style: italic; font-weight: 500; font-size: clamp(1.7rem, min(7vw, 5.4svh), 3rem); line-height: 1; }
+.gnote .line { margin: 0; opacity: .85; max-width: 26rem; }
+.hint { display: none; margin: 0; font: 500 .6rem var(--font-ui); letter-spacing: .22em; text-transform: uppercase; opacity: .65; }
+
+/* keyboard route into a fragrance: the pick buttons stay hidden until focused */
+.picks { list-style: none; margin: 0; padding: 0; }
+.picks li { position: absolute; left: 0; bottom: 100%; }
+.picks button { position: absolute; left: 0; bottom: .4rem; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.picks button:focus-visible { width: max-content; height: auto; padding: .55rem 1rem; clip-path: none; border-radius: 99px; background: var(--pink); color: var(--deep); font: 500 .72rem var(--font-ui); letter-spacing: .08em; z-index: 3; }
+
+/* ---------- focus layer ---------- */
+.f-close { position: absolute; top: -.2rem; right: 0; z-index: 3; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid rgba(244, 198, 210, .5); border-radius: 50%; background: rgba(20, 5, 11, .3); color: var(--blush); transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out); }
+.f-close:active { transform: scale(.92) rotate(90deg); }
+@media (hover: hover) and (pointer: fine) { .f-close:hover { background: var(--pink); color: var(--deep); } }
+.f-body { --dx: 0px; --dy: 16px; display: grid; gap: .5rem; align-content: start; }
+.f-body > * { margin: 0; opacity: 0; transform: translate3d(var(--dx), var(--dy), 0); }
+.f-body.in > * { opacity: 1; transform: none; transition: opacity 380ms var(--ease-out), transform 520ms var(--ease-out); transition-delay: calc(var(--i, 0) * 50ms + 60ms); }
+.f-body.leaving > * { opacity: 0; transform: translate3d(calc(var(--dx) * -.6), 0, 0); transition: opacity 130ms linear, transform 130ms var(--ease-out); transition-delay: 0s; }
+.f-top { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+.f-share { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .3rem 1rem; border: 1px solid rgba(244, 198, 210, .4); border-radius: 99px; background: rgba(20, 5, 11, .2); color: var(--blush); font: 500 .62rem var(--font-ui); letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out); }
+.f-share:active { transform: scale(.96); }
+.f-share[data-done='true'] { background: var(--blush); border-color: var(--blush); color: var(--deep); }
+@media (hover: hover) and (pointer: fine) { .f-share:hover { background: rgba(244, 198, 210, .22); } .f-share[data-done='true']:hover { background: var(--blush); } }
+.f-count { font: 500 .66rem var(--font-ui); letter-spacing: .3em; text-transform: uppercase; color: var(--pink); display: flex; align-items: center; gap: .6rem; }
+.f-count i { width: 1.4rem; height: 1px; background: currentColor; opacity: .6; }
+.f-name { overflow: hidden; padding: .05em .1em .14em 0; font: italic 600 clamp(2.6rem, min(13vw, 8.4svh), 5rem)/.95 var(--font-display); color: var(--blush); text-wrap: balance; }
+.f-name span { display: block; transform: translate3d(0, 108%, 0); transition: transform 160ms var(--ease-out); }
+.f-body.in .f-name span { transform: none; transition: transform 720ms var(--ease-out) 140ms; }
+.f-line { font: 500 1.05rem/1.35 var(--font-display); letter-spacing: .01em; color: var(--pink); max-width: 28rem; }
+.f-desc { display: none; max-width: 28rem; opacity: .85; }
+.f-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: .2rem; max-width: 28rem; }
+.f-notes div { padding: .55rem .6rem .6rem; border-top: 1px solid rgba(244, 198, 210, .35); }
+.f-notes dt { font: 500 .56rem var(--font-ui); letter-spacing: .26em; text-transform: uppercase; color: var(--pink); margin-bottom: .2rem; }
+.f-notes dd { margin: 0; font-size: .86rem; line-height: 1.3; }
+.f-buy { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; margin-top: .15rem; }
+.f-sizes { display: flex; gap: .4rem; }
+.f-size { min-height: 2.75rem; padding: .3rem .9rem; border: 1px solid rgba(244, 198, 210, .4); border-radius: 99px; background: rgba(20, 5, 11, .2); color: var(--blush); font: 500 .72rem var(--font-ui); letter-spacing: .1em; transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out); }
+.f-size:active { transform: scale(.96); }
+.f-size[aria-pressed='true'] { background: var(--blush); border-color: var(--blush); color: var(--deep); }
+.f-price { font: 600 1.7rem/1 var(--font-display); }
+.f-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .2rem; }
+.f-nav { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+.f-swipe { margin: 0 0 0 auto; font: 500 .6rem var(--font-ui); letter-spacing: .22em; text-transform: uppercase; opacity: .65; display: none; }
+.pg { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid rgba(244, 198, 210, .4); border-radius: 50%; background: rgba(20, 5, 11, .2); color: var(--blush); transition: transform 160ms var(--ease-out); }
+.pg:active { transform: scale(.94); }
+.dots { display: flex; align-items: center; flex: 0 1 auto; min-width: 0; gap: .1rem; }
+.dot { position: relative; flex: 1 1 1.6rem; min-width: 1.05rem; max-width: 1.6rem; height: 2.75rem; padding: 0; border: 0; background: none; }
+.dot::after { content: ''; position: absolute; left: 50%; top: 50%; width: .45rem; height: .45rem; margin: -.225rem; border-radius: 50%; background: var(--pink); opacity: .35; transition: transform 220ms var(--ease-out), opacity 220ms var(--ease-out); }
+.dot[aria-current='true']::after { opacity: 1; transform: scale(1.5); }
+
+@media (min-width: 36rem) { .f-swipe { display: block; } }
+@media (min-width: 40rem) and (min-height: 46rem) { .hero-copy .sub { display: block; } }
+/* small screens: bottles take the middle; trim the text so nothing is squeezed */
+@media (max-width: 55.99rem) and (max-height: 50rem) { .f-line { display: none; } .gnote .line { display: none; } .gnote { min-height: 0; } }
+@media (max-width: 55.99rem) and (max-height: 40rem) { .f-notes { display: none; } .hero-copy h1 { font-size: 2.4rem; } }
+@media (max-width: 26rem) { .f-sizes { gap: .3rem; } .f-size { padding-inline: .7rem; } .tag { font-size: .54rem; letter-spacing: .14em; } }
+@media (min-width: 56rem) {
+  /* two columns: words on the left, the bottles in their own area on the right (fading softly where it meets the words) */
+  .stage { --vl: calc(var(--gutter) + 27rem); }
+  .stage-view { -webkit-mask-image: linear-gradient(90deg, transparent, #000 3rem); mask-image: linear-gradient(90deg, transparent, #000 3rem); }
+  .stage-ui { padding-top: 6.5rem; padding-bottom: 4.4rem; }
+  .g-layer, .f-layer { grid-template-columns: minmax(0, 27rem) 1fr; column-gap: 3rem; }
+  .g-layer { grid-template-rows: auto minmax(0, 1fr) auto; }
+  .hero-copy, .dock { grid-column: 1; }
+  .g-zone { grid-column: 2; grid-row: 1 / -1; }
+  .tabs { flex-wrap: wrap; overflow: visible; margin: 0; padding: .2rem 0; }
+  .f-layer { grid-template-rows: 1fr auto; }
+  .f-zone { grid-column: 2; grid-row: 1 / -1; }
+  .f-body { grid-column: 1; grid-row: 1; align-self: center; }
+  .f-nav { grid-column: 1; grid-row: 2; }
+  .f-desc { display: block; }
+  .f-swipe { display: none; }
+  .f-close { top: -2.2rem; }
+  .hint { display: block; }
+  .bigword { top: 50%; }
+}
+/* very small phones (320 px wide) */
+@media (max-width: 22rem) {
+  .hero-copy h1 { font-size: 2.1rem; }
+  .f-size { padding-inline: .55rem; font-size: .66rem; letter-spacing: .04em; }
+  .f-buy { gap: .5rem; } .f-price { font-size: 1.4rem; }
+  .f-actions .btn { padding-inline: 1.05rem; }
+  .f-name { font-size: 2.3rem; }
+}

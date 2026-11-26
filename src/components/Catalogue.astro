@@ -1,0 +1,38 @@
+---
+import { site, categories, items, money, minPrice, catLabel, noteLine, sizes, catalogue } from '../lib/data';
+const defMl = sizes.find((s) => s.key === catalogue.defaultSize)!.ml;
+const moodStyle = (k: string) => { const x = site.moods[k as keyof typeof site.moods]; return `--a:${x.a};--b:${x.b};--glow:${x.glow}`; };
+---
+<section id="collection" class="sec tone-blush" aria-labelledby="coll-title">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">The collection</p>
+      <h2 id="coll-title">Find the one that <em>feels like you.</em></h2>
+      <p>Every bottle opens into a 3D view with its notes and sizes. Add what you like, then send the order on WhatsApp.</p>
+    </div>
+    <div class="chips rv" role="group" aria-label="Filter by category">
+      <button type="button" class="chip" data-chip="all" aria-pressed="true">All</button>
+      {categories.map((c) => <button type="button" class="chip" data-chip={c.id} aria-pressed="false">{c.label}</button>)}
+    </div>
+    <ul class="grid">
+      {items.map((it, i) => (
+        <li class="card rv" data-card data-cat={it.category} style={`--i:${i % 4};${moodStyle(it.mood)}`}>
+          <div class="card-media">
+            <img src={`/posters/${it.id}.webp`} alt="" width="640" height="800" loading="lazy" decoding="async" />
+            {it.badge && <span class="badge">{it.badge === 'new' ? 'New' : 'Bestseller'}</span>}
+          </div>
+          <button type="button" class="card-hit" data-open-product={it.id} aria-label={`View ${it.name}`}></button>
+          <div class="card-body">
+            <p class="cat">{catLabel(it.category)}</p>
+            <h3>{it.name}</h3>
+            <p class="notes">{noteLine(it)}</p>
+            <div class="card-foot">
+              <span class="price"><small>From</small>{money(minPrice(it))}</span>
+              <button type="button" class="btn small" data-add data-id={it.id}>Add · {defMl} ml</button>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

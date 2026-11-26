@@ -1,0 +1,70 @@
+---
+import '../styles/base.css';
+import '../styles/stage.css';
+import '../styles/dialogs.css';
+import '../styles/motion.css';
+import display300 from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2?url';
+import display300i from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-italic.woff2?url';
+import display500i from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-italic.woff2?url';
+import display600i from '@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-italic.woff2?url';
+import ui400 from '@fontsource/jost/files/jost-latin-400-normal.woff2?url';
+import ui500 from '@fontsource/jost/files/jost-latin-500-normal.woff2?url';
+import { site, cssVars } from '../lib/data';
+
+const { title, description, path = '/', image = '/og.png', plain = false } = Astro.props;
+const canonical = `${site.url}${path}`, ogImage = `${site.url}${image}`;
+const face = (family: string, weight: number, style: string, url: string) =>
+  `@font-face{font-family:'${family}';font-style:${style};font-weight:${weight};font-display:swap;src:url(${url}) format('woff2')}`;
+const fonts = [face('Cormorant Garamond', 300, 'normal', display300), face('Cormorant Garamond', 300, 'italic', display300i), face('Cormorant Garamond', 500, 'italic', display500i), face('Cormorant Garamond', 600, 'italic', display600i), face('Jost', 400, 'normal', ui400), face('Jost', 500, 'normal', ui500)].join('');
+const introOn = site.intro.enabled && !plain;
+---
+<!doctype html>
+<html lang={site.locale.split('-')[0]} style={cssVars}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={site.palette.deep} />
+    <meta name="color-scheme" content="dark light" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.business.display} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href={display300} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={ui400} as="font" type="font/woff2" crossorigin />
+    <style set:html={fonts} />
+    <script is:inline define:vars={{ introOn, minMs: site.intro.minMs, maxMs: site.intro.maxMs }}>
+      // Decide before first paint, so nothing flashes: should the start-up scene run, and is this a light device?
+      var r = document.documentElement, c = navigator.connection, q = location.search;
+      r.classList.add('js');
+      var slow = (c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))) || (navigator.deviceMemory && navigator.deviceMemory <= 1);
+      var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (slow) r.classList.add('lite');
+      if (/[?&]still\b/.test(q)) r.classList.add('still-mode');
+      var seen = false; try { seen = sessionStorage.getItem('sbr.intro') === '1'; } catch (e) {}
+      var go = introOn && !slow && !still && !seen && !location.hash && !/^\/p\//.test(location.pathname) && !/[?&]nointro\b/.test(q);
+      if (go) { r.classList.add('intro-on'); window.__intro = { min: minMs, max: maxMs, t0: Date.now() }; try { sessionStorage.setItem('sbr.intro', '1'); } catch (e) {} }
+      else setTimeout(function () { r.classList.add('ready'); }, 30);
+      // failsafe: whatever happens, the scene never blocks the page for long
+      setTimeout(function () { var i = document.getElementById('intro'); if (i && r.classList.contains('intro-on')) { r.classList.remove('intro-on'); r.classList.add('ready'); } }, maxMs + 2500);
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+---
+// The one logo component: the bottle mark, plus the "Scents by Rhem" wordmark as real text (so it stays crisp and selectable).
+import paths from './logo-paths.json';
+const { word = true, class: cls = '' } = Astro.props;
+const m = paths.mark;
+---
+<span class:list={['logo', cls]}>
+  <svg viewBox="0 0 100 120" role="img" aria-label="ScentsByRhem" width="45" height="54">
+    <path d={m.bottle} fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" />
+    <path d={m.r} fill="currentColor" />
+    <circle class="mark-dot" cx={m.dot.cx} cy={m.dot.cy} r={m.dot.r} />
+  </svg>
+  {word && <span class="logo-word"><small>Scents by</small><b>Rhem</b></span>}
+</span>

@@ -1,0 +1,42 @@
+---
+// The bag: a bar that appears once something is added, and a sheet with the editable list and the order details.
+import { site } from '../lib/data';
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+---
+<div id="cart-bar" class="cart-bar" data-open="false">
+  <button type="button" class="cart-open" data-cart-open aria-haspopup="dialog">
+    <span class="cart-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5h13l-1 11.5h-11z" /><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" /></svg>
+      <b class="cart-badge" data-bar-count>0</b>
+    </span>
+    <span class="cart-sum"><strong>Your bag</strong><span data-bar-total></span></span>
+    <span class="btn pink" aria-hidden="true">View order</span>
+  </button>
+</div>
+
+<dialog id="cart-dialog" class="sheet" aria-labelledby="cart-title">
+  <div class="sheet-head">
+    <h2 id="cart-title">Your bag</h2>
+    <button type="button" class="x" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+  </div>
+  <div class="sheet-scroll">
+    <ul class="cart-list" data-list></ul>
+    <p class="cart-empty" data-empty hidden>Your bag is empty. Choose a fragrance from the collection.</p>
+    <form id="order-form" data-form novalidate hidden>
+      <h3 class="details-h">Your details</h3>
+      <label class="field"><span>Your name</span><input name="name" autocomplete="name" maxlength="60" required /><span class="err" data-err="name" role="alert"></span></label>
+      <fieldset class="group"><legend>How would you like it?</legend>
+        <div class="opts">
+          {site.checkout.fulfilment.map((f, i) => <label class="opt"><input type="radio" name="fulfil" value={f} checked={i === 0} /><span>{f === 'pickup' ? 'Pick up' : 'Delivery'}</span></label>)}
+        </div>
+      </fieldset>
+      <label class="field addr" data-addr hidden><span>Delivery address</span><textarea name="address" rows="2" maxlength="200" placeholder="Street, area and city"></textarea><span class="err" data-err="address" role="alert"></span></label>
+      <label class="field"><span>Note <em>(optional)</em></span><textarea name="note" rows="2" maxlength="200" placeholder="A gift message, a preferred time…"></textarea></label>
+    </form>
+  </div>
+  <div class="sheet-foot" data-foot hidden>
+    <div class="cart-total"><span>Total</span><strong data-sum></strong></div>
+    <a class="btn wide" data-send href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+    <button type="button" class="linkbtn" data-clear>Clear bag</button>
+  </div>
+</dialog>

@@ -1,0 +1,79 @@
+{
+  "categories": [
+    { "id": "her", "label": "For Her", "blurb": "Soft florals, powdery musks and bright rose." },
+    { "id": "him", "label": "For Him", "blurb": "Dark woods, spice and clean leather." },
+    { "id": "unisex", "label": "Unisex", "blurb": "Amber, citrus and heirloom blends for anyone." },
+    { "id": "oud", "label": "Oud & Arabian", "blurb": "Smoky oud, saffron and velvet resins." }
+  ],
+  "sizes": [
+    { "ml": 30, "key": "30" },
+    { "ml": 50, "key": "50" },
+    { "ml": 100, "key": "100" }
+  ],
+  "defaultSize": "50",
+  "items": [
+    {
+      "id": "rose-porcelaine", "name": "Rose Porcelaine", "category": "her", "model": "porcelain-rose", "mood": "blush", "badge": "bestseller",
+      "line": "Soft rose, white musk, a hush of vanilla.",
+      "description": "A powdery rose that sits close to the skin. Easy by day, unforgettable by candlelight.",
+      "notes": { "top": ["Pink pepper", "Bergamot"], "heart": ["Damask rose", "Peony"], "base": ["White musk", "Vanilla"] },
+      "prices": { "30": 18000, "50": 28000, "100": 45000 }, "rot": [-10.9, 0, 1.3]
+    },
+    {
+      "id": "jardin-blanc", "name": "Jardin Blanc", "category": "her", "model": "garden-square", "mood": "rose",
+      "line": "White flowers after rain.",
+      "description": "Jasmine and magnolia over a clean cedar base. Light, bright and quietly confident.",
+      "notes": { "top": ["Pear", "Neroli"], "heart": ["Jasmine", "Magnolia"], "base": ["Cedar", "Amber"] },
+      "prices": { "30": 17000, "50": 26000, "100": 42000 }
+    },
+    {
+      "id": "eclat-de-rose", "name": "Éclat de Rose", "category": "her", "model": "blanc-fluted", "mood": "wine", "badge": "new",
+      "line": "Raspberry, rose and warm sandalwood.",
+      "description": "A glossy, modern rose with a juicy opening and a smooth woody finish.",
+      "notes": { "top": ["Raspberry", "Lychee"], "heart": ["Rose", "Violet"], "base": ["Sandalwood", "Musk"] },
+      "prices": { "30": 19000, "50": 30000, "100": 48000 }
+    },
+    {
+      "id": "noir-absolu", "name": "Noir Absolu", "category": "him", "model": "noir-facet", "mood": "noir", "badge": "bestseller",
+      "line": "Black pepper, leather and vetiver.",
+      "description": "Dark, sharp and composed. A scent that walks into the room before you do.",
+      "notes": { "top": ["Black pepper", "Grapefruit"], "heart": ["Leather", "Cardamom"], "base": ["Vetiver", "Tonka"] },
+      "prices": { "30": 20000, "50": 32000, "100": 52000 }
+    },
+    {
+      "id": "nuit-baroque", "name": "Nuit Baroque", "category": "him", "model": "midnight-baroque", "mood": "dusk",
+      "line": "Saffron, incense and amberwood.",
+      "description": "Rich and ceremonial. Saffron and incense melt into a deep amber base.",
+      "notes": { "top": ["Saffron", "Bergamot"], "heart": ["Iris", "Incense"], "base": ["Amberwood", "Patchouli"] },
+      "prices": { "30": 22000, "50": 35000, "100": 56000 }, "rot": [0, 0, 0]
+    },
+    {
+      "id": "amber-royale", "name": "Amber Royale", "category": "unisex", "model": "amber-diamond", "mood": "velvet",
+      "line": "Orange blossom, honey and amber.",
+      "description": "Golden and warm, with a sweet resin glow that suits anyone.",
+      "notes": { "top": ["Orange blossom", "Cardamom"], "heart": ["Amber", "Honey"], "base": ["Benzoin", "Vanilla"] },
+      "prices": { "30": 21000, "50": 33000, "100": 53000 }
+    },
+    {
+      "id": "heirloom-bleu", "name": "Heirloom Bleu", "category": "unisex", "model": "heirloom-locket", "mood": "rose", "badge": "new",
+      "line": "Lavender, orris and tuberose.",
+      "description": "Powdery, nostalgic and a little bit dreamy. Like a keepsake you wear.",
+      "notes": { "top": ["Lavender", "Mandarin"], "heart": ["Orris", "Tuberose"], "base": ["Sandalwood", "White musk"] },
+      "prices": { "30": 23000, "50": 36000, "100": 58000 }
+    },
+    {
+      "id": "velvet-oud", "name": "Velvet Oud", "category": "oud", "model": "velvet-oud", "mood": "velvet", "badge": "bestseller",
+      "line": "Rose, saffron and deep oud.",
+      "description": "Smoky oud wrapped in Turkish rose and saffron. Opulent, long-lasting, unmistakable.",
+      "notes": { "top": ["Rose", "Saffron"], "heart": ["Oud", "Turkish rose"], "base": ["Amber", "Musk"] },
+      "prices": { "30": 25000, "50": 40000, "100": 65000 }
+    },
+    {
+      "id": "amethyst-oud", "name": "Amethyst Oud", "category": "oud", "model": "amethyst", "mood": "dusk",
+      "line": "Plum, incense and dark leather.",
+      "description": "A jewel-toned oud with sweet plum on top and a leathery, resinous trail.",
+      "notes": { "top": ["Plum", "Cinnamon"], "heart": ["Oud", "Incense"], "base": ["Leather", "Patchouli"] },
+      "prices": { "30": 24000, "50": 38000, "100": 62000 }
+    }
+  ]
+}

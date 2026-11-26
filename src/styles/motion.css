@@ -1,0 +1,57 @@
+/* Start-up scene (a spritz of mist), open transition, hero entrance, reduced motion. Transform + opacity only,
+   except the one-off line-drawing of the logo outline (a tiny SVG path, runs once). */
+
+/* ---------- start-up scene ---------- */
+.intro { position: fixed; z-index: 100; inset: 0; display: none; place-items: center; background: var(--deep); color: var(--pink); overflow: hidden; }
+html.intro-on .intro { display: grid; }
+html.intro-on { overflow: hidden; }
+.intro-stage { position: relative; display: grid; justify-items: center; gap: 1.1rem; }
+.intro-mark { width: min(38vw, 9.5rem); height: auto; overflow: visible; }
+.intro-mark .draw { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: stroke-in 1100ms 150ms var(--ease-io) forwards; }
+.intro-mark .r { fill: currentColor; opacity: 0; animation: rise-in 600ms 800ms var(--ease-out) forwards; }
+.intro-mark .dot { fill: currentColor; opacity: 0; transform-box: fill-box; transform-origin: center; animation: rise-in 400ms 1200ms var(--ease-out) forwards; }
+.intro-word { margin: 0; text-align: center; font: 500 .66rem/1 var(--font-ui); letter-spacing: .5em; text-transform: uppercase; opacity: 0; animation: rise-in 700ms 1100ms var(--ease-out) forwards; }
+.intro-word em { display: block; margin-top: .5rem; font: italic 300 2.6rem/1 var(--font-display); letter-spacing: 0; text-transform: none; color: var(--blush); }
+@keyframes stroke-in { to { stroke-dashoffset: 0; } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.mist { position: absolute; inset: 0; pointer-events: none; }
+.mist i { position: absolute; left: 50%; top: 46%; width: 60vmax; height: 60vmax; margin: -30vmax 0 0 -30vmax; border-radius: 50%; background: radial-gradient(closest-side, rgba(244, 198, 210, .75), rgba(200, 106, 134, .35) 55%, transparent); opacity: 0; transform: scale(.15); }
+.mist i:nth-child(2) { translate: 12vmax -6vmax; background: radial-gradient(closest-side, rgba(251, 233, 238, .6), rgba(244, 198, 210, .25) 55%, transparent); }
+.mist i:nth-child(3) { translate: -10vmax 8vmax; background: radial-gradient(closest-side, rgba(200, 106, 134, .6), rgba(122, 22, 51, .3) 55%, transparent); }
+.intro.out { animation: intro-out 760ms 220ms var(--ease-io) forwards; pointer-events: none; }
+.intro.out .intro-stage { animation: stage-out 520ms var(--ease-out) forwards; }
+.intro.out .mist i { animation: spritz 1000ms var(--ease-out) forwards; }
+.intro.out .mist i:nth-child(2) { animation-delay: 90ms; }
+.intro.out .mist i:nth-child(3) { animation-delay: 180ms; }
+@keyframes spritz { 0% { opacity: .95; transform: scale(.15); } 100% { opacity: 0; transform: scale(1.6); } }
+@keyframes intro-out { to { opacity: 0; } }
+@keyframes stage-out { to { opacity: 0; transform: translateY(-14px) scale(1.04); } }
+
+/* ---------- hero entrance (runs once the start-up scene is gone) ---------- */
+.js .hero-copy > *, .js .dock > * { opacity: 0; }
+.ready .hero-copy > *, .ready .dock > * { opacity: 1; animation: rise-in 700ms var(--ease-out) backwards; }
+.ready .hero-copy > :nth-child(2) { animation-delay: 80ms; }
+.ready .hero-copy > :nth-child(3) { animation-delay: 160ms; }
+.ready .dock > :nth-child(1) { animation-delay: 220ms; }
+.ready .dock > :nth-child(2) { animation-delay: 300ms; }
+.ready .dock > :nth-child(3) { animation-delay: 380ms; }
+
+/* ---------- open transition: a bloom of mood colour grows from the tap, then the fragrance sheet opens under it ---------- */
+.bloom { position: fixed; z-index: 90; left: 0; top: 0; pointer-events: none; border-radius: 50%; will-change: transform, opacity; background: radial-gradient(closest-side, var(--glow), var(--b) 62%, var(--a)); }
+
+/* ---------- reduced motion: keep fades, drop movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .intro, .bloom { display: none !important; }
+  .js .rv { transform: none; }
+  .js .hero-copy > *, .js .dock > * { opacity: 1; }
+  .ready .hero-copy > *, .ready .dock > * { animation: none; }
+  .pp, .pp.fall, .pp.jump, .tag, .g-layer, .f-layer, .gnote, .bigword, .f-close, .f-size, .tab { transition: none !important; }
+  .pp img, .door.pop { animation: none !important; }
+  .f-body > *, .f-body.in > *, .f-name span, .f-body.in .f-name span { transition: none !important; transform: none !important; }
+  .sheet[open] { animation: fade-in 200ms ease-out; }
+  .cart-bar { transition: opacity 200ms; transform: none; opacity: 0; pointer-events: none; }
+  .cart-bar[data-open='true'] { opacity: 1; }
+  .cart-bar.bump .cart-open, .custom-art img { animation: none; }
+  .info.swap { transform: none; }
+}

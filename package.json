@@ -1,0 +1,29 @@
+{
+  "name": "scentsbyrhem",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run validate && astro build",
+    "preview": "astro preview",
+    "validate": "tsx src/config/validate.ts",
+    "test": "tsx test/run.ts && node test/leads.test.mjs",
+    "models": "node scripts/process-models.mjs"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.2.0",
+    "@fontsource/jost": "^5.2.0",
+    "astro": "^7.4.13",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "@types/three": "^0.187.0",
+    "meshoptimizer": "^1.0.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15"
+  }
+}

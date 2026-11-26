@@ -1,0 +1,53 @@
+---
+// After WhatsApp: "Did your order go through?" -> yes: thank you; no: what happened. Esc cannot skip it.
+const reasons = [
+  ['no-open', 'WhatsApp did not open'],
+  ['no-send', 'WhatsApp opened but the message did not send'],
+  ['no-app', 'I do not have WhatsApp'],
+  ['wrong', 'The message looked wrong or incomplete'],
+  ['changed', 'I changed my mind'],
+  ['other', 'Something else'],
+];
+---
+<dialog id="confirm-dialog" class="sheet modal" aria-labelledby="cf-title" aria-describedby="cf-text">
+  <div class="sheet-scroll">
+    <p class="ref" data-ref></p>
+    <h2 id="cf-title" data-cf-title>Did your order go through?</h2>
+    <p id="cf-text" data-cf-text>You were taken to WhatsApp. Did the message send?</p>
+    <div class="stack">
+      <button type="button" class="btn" data-yes>Yes, it went through</button>
+      <button type="button" class="btn ghost" data-no>No, something went wrong</button>
+      <button type="button" class="linkbtn" data-cancel>Cancel and start over</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="issue-dialog" class="sheet modal" aria-labelledby="is-title">
+  <div class="sheet-scroll">
+    <h2 id="is-title">Oh no! What happened?</h2>
+    <p>Tell us what went wrong so we can fix it.</p>
+    <form id="issue-form" novalidate>
+      <fieldset class="group" style="text-align:left"><legend class="sr">What happened</legend>
+        <div class="opts col">
+          {reasons.map(([v, l], i) => <label class="opt block"><input type="radio" name="reason" value={v} checked={i === 0} /><span>{l}</span></label>)}
+        </div>
+      </fieldset>
+      <label class="field"><span>Anything else? <em>(optional)</em></span><textarea name="note" rows="2" maxlength="200"></textarea></label>
+      <label class="field"><span>Phone or email so we can reach you <em>(optional)</em></span><input name="contact" maxlength="80" autocomplete="tel" /></label>
+    </form>
+    <div class="stack">
+      <button type="button" class="btn" data-keep>Send and keep my bag</button>
+      <button type="button" class="btn ghost" data-clear-send>Send and clear my bag</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="thanks-dialog" class="sheet modal" aria-labelledby="th-title">
+  <div class="sheet-scroll">
+    <div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
+    <p class="ref" data-ref></p>
+    <h2 id="th-title" data-th-title>Thank you!</h2>
+    <p data-th-text>We have your order and will reply on WhatsApp soon.</p>
+    <div class="stack"><button type="button" class="btn" data-done>Done</button></div>
+  </div>
+</dialog>

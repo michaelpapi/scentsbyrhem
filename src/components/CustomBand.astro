@@ -1,0 +1,24 @@
+---
+import { site, items } from '../lib/data';
+const art = items.find((i) => i.id === 'heirloom-bleu') ?? items[0];
+---
+<section id="custom" class="sec tone-wine custom" aria-labelledby="custom-title">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow">Custom order</p>
+      <h2 id="custom-title">Not on the shelf? <em>We'll find it.</em></h2>
+      <p>Tell us the perfume you have in mind, even from another house, or ask for a blend made around you. We reply on WhatsApp with availability and price before anything is paid.</p>
+      <ul class="kinds">
+        {site.custom.kinds.map((k) => <li>{k.label}</li>)}
+      </ul>
+      <button type="button" class="btn pink" data-open-custom>Request a custom order</button>
+    </div>
+    <div class="custom-art rv" data-door-wrap>
+      <button type="button" class="door" data-door aria-label="Request a custom order">
+        <span class="arch"></span><span class="arch two"></span>
+        <img src={`/posters/${art.id}.webp`} alt="" width="640" height="800" loading="lazy" decoding="async" />
+      </button>
+      <p class="door-note"><b>Tap the door to request a custom order</b><small>Pick up, or delivered to your location</small></p>
+    </div>
+  </div>
+</section>

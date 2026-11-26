@@ -1,0 +1,24 @@
+[
+  {
+    "q": "How do I order?",
+    "a": "Add your fragrances to the bag, fill in your name and how you want to receive them, then press Send on WhatsApp. Your order opens in WhatsApp ready to send, and we confirm everything with you there."
+  },
+  {
+    "q": "Can I order a perfume that is not in the collection?",
+    "a": "Yes. Use Custom order, tell us the brand and fragrance you want, the size and when you need it. We reply on WhatsApp to confirm availability and the price before anything is paid."
+  },
+  {
+    "q": "What sizes do you sell?",
+    "a": "Most fragrances come in 30 ml, 50 ml and 100 ml. Pick your size on the fragrance page before you add it to the bag."
+  },
+  {
+    "q": "How do I pay?",
+    "a": "We agree payment with you on WhatsApp once the order is confirmed. Nothing is charged on this website.",
+    "confirm": true
+  },
+  {
+    "q": "Do you deliver?",
+    "a": "Yes. Choose delivery when you order and add your address. We confirm the delivery fee and timing with you on WhatsApp.",
+    "confirm": true
+  }
+]
