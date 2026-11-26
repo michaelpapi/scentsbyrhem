@@ -1,0 +1,39 @@
+<!doctype html><meta charset=utf-8>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/tools/node_modules/three/build/three.module.js","three/addons/":"/tools/node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const q = new URLSearchParams(location.search); const id = q.get('id'); const yaw = +(q.get('yaw') ?? 0.4);
+const W = 640, H = 800;
+try {
+  const data = await (await fetch('/scentsbyrhem/src/data/products.json')).json();
+  const site = await (await fetch('/scentsbyrhem/src/data/site.json')).json();
+  const it = data.items.find(i => i.id === id); const mood = site.moods[it.mood];
+  const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  r.setSize(W, H); r.setPixelRatio(1); r.setClearColor(0x000000, 0);
+  r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.08;
+  document.body.append(r.domElement);
+  const scene = new THREE.Scene();
+  const pm = new THREE.PMREMGenerator(r); scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = 0.95;
+  const key = new THREE.DirectionalLight(0xffeef2, 2.1); key.position.set(2.6, 3.6, 3.4); scene.add(key);
+  const rim = new THREE.DirectionalLight(new THREE.Color(mood.glow), 3.2); rim.position.set(-3.2, 2.2, -3); scene.add(rim);
+  scene.add(new THREE.AmbientLight(0xffd9e2, 0.28));
+  const g = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync('/scentsbyrhem/public/models/' + it.model + '.glb');
+  const fix = new THREE.Group(); fix.add(g.scene);
+  if (it.rot) fix.rotation.set(...it.rot.map(d => d * Math.PI / 180));
+  const wrap = new THREE.Group(); wrap.add(fix); wrap.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(wrap); const size = box.getSize(new THREE.Vector3()); const c = box.getCenter(new THREE.Vector3());
+  const wide = Math.max(size.x, size.z); const k = Math.min(1 / size.y, 0.92 / wide) * (it.scale ?? 1);
+  fix.position.set(-c.x, -box.min.y, -c.z);
+  const root = new THREE.Group(); root.add(wrap); root.scale.setScalar(k);
+  const pivot = new THREE.Group(); pivot.add(root); pivot.rotation.y = yaw; scene.add(pivot);
+  const cam = new THREE.PerspectiveCamera(28, W / H, 0.1, 40);
+  const tan = Math.tan(THREE.MathUtils.degToRad(14));
+  const d = Math.max(1 / (0.8 * 2 * tan), (Math.hypot(size.x, size.z) * k * 1.16) / (2 * tan * (W / H)));
+  cam.position.set(0, 0.5 + 0.12, d); cam.lookAt(0, 0.5, 0);
+  r.render(scene, cam); window.__ready = true;
+} catch (e) { window.__err = String(e); window.__ready = true; }
+</script>

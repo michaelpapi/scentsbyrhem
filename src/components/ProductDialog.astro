@@ -1,0 +1,36 @@
+---
+// One dialog reused for every fragrance. src/scripts/product.ts fills it; the live 3D view (gl/viewer.ts) loads when it first opens.
+---
+<dialog id="product-dialog" class="sheet pdlg" aria-labelledby="pd-name">
+  <div class="pd-media" data-pd-media>
+    <button type="button" class="x" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+    <img class="pd-poster" data-pd-poster alt="" width="640" height="800" />
+    <canvas data-pd-canvas tabindex="0" aria-label="3D view of the bottle. Drag to turn it, use plus and minus to zoom."></canvas>
+    <div class="pd-tools" role="group" aria-label="3D view controls">
+      <button type="button" class="zoom" data-zoom-out aria-label="Zoom out">−</button>
+      <button type="button" data-reset>Reset</button>
+      <button type="button" class="zoom" data-zoom-in aria-label="Zoom in">+</button>
+    </div>
+  </div>
+  <div class="pd-main">
+    <div class="sheet-scroll pd-body">
+      <div class="pd-info">
+        <p class="cat" data-pd-cat></p>
+        <h2 class="pd-name" id="pd-name" data-pd-name></h2>
+        <p class="pd-line" data-pd-line></p>
+        <p class="pd-desc" data-pd-desc></p>
+        <div class="pd-notes">
+          <div><h4>Top</h4><ul data-n-top></ul></div>
+          <div><h4>Heart</h4><ul data-n-heart></ul></div>
+          <div><h4>Base</h4><ul data-n-base></ul></div>
+        </div>
+        <fieldset class="group sizes"><legend>Size</legend><div class="opts" data-sizes></div></fieldset>
+      </div>
+    </div>
+    <div class="sheet-foot pd-foot">
+      <div class="price"><small>Price</small><span data-pd-price></span></div>
+      <button type="button" class="pd-share" data-pd-share aria-label="Share this fragrance"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5.5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><path d="M8.4 10.7l7.2-3.9M8.4 13.3l7.2 3.9"/></svg><span class="lbl">Share</span></button>
+      <button type="button" class="btn" data-pd-add>Add to bag</button>
+    </div>
+  </div>
+</dialog>

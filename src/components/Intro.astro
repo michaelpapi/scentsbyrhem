@@ -1,0 +1,16 @@
+---
+// Start-up scene: the bottle outline draws itself, a spritz of mist blooms, and the page opens. Runs once per visit (see Base.astro).
+import paths from './logo-paths.json';
+const m = paths.mark;
+---
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="mist"><i></i><i></i><i></i></div>
+  <div class="intro-stage">
+    <svg class="intro-mark" viewBox="0 0 100 120">
+      <path class="draw" pathLength="1" d={m.bottle} />
+      <path class="r" d={m.r} />
+      <circle class="dot" cx={m.dot.cx} cy={m.dot.cy} r={m.dot.r} />
+    </svg>
+    <p class="intro-word">Scents by<em>Rhem</em></p>
+  </div>
+</div>

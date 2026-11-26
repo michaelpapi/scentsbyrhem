@@ -1,0 +1,43 @@
+---
+// "Book an appointment" on the other sites becomes "Custom order" here: a request for a perfume that is not in the collection, or a made-for-me blend.
+import { site } from '../lib/data';
+---
+<dialog id="custom-dialog" class="sheet cdlg" aria-labelledby="custom-dlg-title">
+  <div class="sheet-head">
+    <h2 id="custom-dlg-title">Custom order</h2>
+    <button type="button" class="x" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+  </div>
+  <div class="sheet-scroll">
+    <p class="lead">Tell us what you are looking for. We reply on WhatsApp with availability and price. Nothing is charged here.</p>
+    <form id="custom-form" novalidate>
+      <fieldset class="group"><legend>What are you after?</legend>
+        <div class="opts col">
+          {site.custom.kinds.map((k, i) => <label class="opt block"><input type="radio" name="kind" value={k.id} checked={i === 0} /><span>{k.label}</span></label>)}
+        </div>
+      </fieldset>
+      <label class="field"><span data-brand-label>Brand and fragrance</span><input name="brand" maxlength="90" placeholder="e.g. the brand and the name of the perfume" /><span class="err" data-err="brand" role="alert"></span></label>
+      <label class="field"><span>Tell us more <em>(optional)</em></span><textarea name="details" rows="3" maxlength="300" placeholder="Notes you love, who it is for, an occasion…"></textarea></label>
+      <fieldset class="group"><legend>Size</legend>
+        <div class="opts">
+          {site.custom.sizes.map((s, i) => <label class="opt"><input type="radio" name="size" value={s} checked={i === site.custom.sizes.length - 1} /><span>{s}</span></label>)}
+        </div>
+      </fieldset>
+      <label class="field"><span>Budget</span>
+        <select name="budget">{site.custom.budgets.map((b, i) => <option value={b} selected={i === site.custom.budgets.length - 1}>{b}</option>)}</select>
+      </label>
+      <div class="date-row">
+        <label class="field"><span>Needed by <em>(optional)</em></span><input type="date" name="date" /><span class="err" data-err="date" role="alert"></span></label>
+        <label class="field"><span>Your name</span><input name="name" autocomplete="name" maxlength="60" /><span class="err" data-err="name" role="alert"></span></label>
+      </div>
+      <fieldset class="group"><legend>How would you like it?</legend>
+        <div class="opts">
+          {site.checkout.fulfilment.map((f, i) => <label class="opt"><input type="radio" name="fulfil" value={f} checked={i === 0} /><span>{f === 'pickup' ? 'Pick up' : 'Delivery'}</span></label>)}
+        </div>
+      </fieldset>
+      <label class="field" data-addr hidden><span>Delivery address</span><textarea name="address" rows="2" maxlength="200" placeholder="Street, area and city"></textarea><span class="err" data-err="address" role="alert"></span></label>
+    </form>
+  </div>
+  <div class="sheet-foot">
+    <a class="btn wide" data-send href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+  </div>
+</dialog>

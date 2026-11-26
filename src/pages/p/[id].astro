@@ -1,0 +1,7 @@
+---
+import Home from '../../components/Home.astro';
+import { items } from '../../lib/data';
+export const getStaticPaths = () => items.map((i) => ({ params: { id: i.id } }));
+const { id } = Astro.params;
+---
+<Home product={id} />

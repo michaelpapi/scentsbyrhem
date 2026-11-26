@@ -1,0 +1,114 @@
+{
+  "slug": "scentsbyrhem",
+  "url": "https://scentsbyrhem.netlify.app",
+  "business": {
+    "name": "ScentsByRhem",
+    "display": "Scents by Rhem",
+    "tagline": "Wear your signature.",
+    "description": "Fine fragrance, chosen for you. Browse the collection in 3D, order on WhatsApp, or request a custom order for any perfume that is not on the shelf."
+  },
+  "hero": {
+    "kicker": "Sweet fragrances",
+    "title": "Sweet notes, made to be remembered.",
+    "text": "Nine signatures float here. Tap one and it steps forward, with its story."
+  },
+  "locale": "en-NG",
+  "currency": "NGN",
+  "contact": {
+    "whatsapp": "2349034812418",
+    "phoneDisplay": "+234 903 481 2418"
+  },
+  "palette": {
+    "deep": "#22080F",
+    "wine": "#4A0F24",
+    "burgundy": "#7A1633",
+    "rose": "#C86A86",
+    "pink": "#F4C6D2",
+    "blush": "#FBE9EE",
+    "ink": "#3B0A1B"
+  },
+  "moods": {
+    "rose": {
+      "a": "#4A1226",
+      "b": "#B24A6B",
+      "glow": "#F7C9D6"
+    },
+    "blush": {
+      "a": "#5A1730",
+      "b": "#B65A79",
+      "glow": "#FBE0E7"
+    },
+    "noir": {
+      "a": "#14060B",
+      "b": "#4A0F24",
+      "glow": "#C86A86"
+    },
+    "wine": {
+      "a": "#2A0A16",
+      "b": "#7A1633",
+      "glow": "#E58DA6"
+    },
+    "velvet": {
+      "a": "#240812",
+      "b": "#8A1C3C",
+      "glow": "#F08CA8"
+    },
+    "dusk": {
+      "a": "#2B0D1F",
+      "b": "#6A2A52",
+      "glow": "#E6A6C8"
+    }
+  },
+  "checkout": {
+    "refPrefix": "SBR",
+    "cartKey": "sbr.cart.v1",
+    "pendingKey": "sbr.pending.v1",
+    "pendingHours": 12,
+    "maxPerLine": 10,
+    "fulfilment": [
+      "pickup",
+      "delivery"
+    ]
+  },
+  "custom": {
+    "leadDays": 3,
+    "maxDays": 120,
+    "kinds": [
+      {
+        "id": "other-brand",
+        "label": "A perfume that is not in the collection"
+      },
+      {
+        "id": "signature",
+        "label": "A signature blend made around me"
+      },
+      {
+        "id": "gift",
+        "label": "Gifts or bulk orders"
+      }
+    ],
+    "sizes": [
+      "30 ml",
+      "50 ml",
+      "100 ml",
+      "Not sure yet"
+    ],
+    "budgets": [
+      "Under ₦30,000",
+      "₦30,000 – ₦60,000",
+      "₦60,000 – ₦100,000",
+      "Above ₦100,000",
+      "Not sure yet"
+    ]
+  },
+  "leads": {
+    "url": "",
+    "token": "change-me-before-deploying",
+    "logOrders": true
+  },
+  "intro": {
+    "enabled": true,
+    "minMs": 2200,
+    "maxMs": 5000
+  }
+}
